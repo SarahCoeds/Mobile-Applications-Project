@@ -10,18 +10,18 @@ class FocusApp extends StatelessWidget {
     return MaterialApp(
       title: 'Daily Focus Planner',
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: LoginScreen(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController nameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController nameInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade300, Colors.purple.shade300],
+            colors: [Colors.blue.shade200, Colors.purple.shade200],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -52,32 +52,31 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 20),
                 TextField(
-                  controller: nameController,
+                  controller: nameInput,
                   decoration: InputDecoration(
-                    labelText: "Enter your name",
+                    labelText: "Your Name",
                     border: OutlineInputBorder(),
                     filled: true,
+                    fillColor: Colors.white70,
                   ),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    String name = nameController.text.trim();
-                    if (name.isNotEmpty) {
+                    String user = nameInput.text.trim();
+                    if (user.isNotEmpty) {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomePage(userName: name),
+                          builder: (context) => HomeScreen(userName: user),
                         ),
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
-                    textStyle: TextStyle(fontSize: 18),
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
                     padding: EdgeInsets.zero,
+                    backgroundColor: Colors.transparent,
                   ),
                   child: Ink(
                     decoration: BoxDecoration(
@@ -90,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.center,
                       height: 50,
                       child: Text(
-                        "Continue",
+                        "Go!",
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
@@ -105,20 +104,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   final String userName;
-  HomePage({required this.userName});
+  HomeScreen({required this.userName});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  TextEditingController taskController = TextEditingController();
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController taskInput = TextEditingController();
   String mood = "Normal";
   String priority = "Medium";
-  String result = "";
-  List<String> taskHistory = [];
+  String focusMessage = "";
+  List<String> history = [];
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +127,7 @@ class _HomePageState extends State<HomePage> {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade300, Colors.purple.shade300],
+            colors: [Colors.blue.shade200, Colors.purple.shade200],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -140,7 +139,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Card(
-                    elevation: 10,
+                    elevation: 8,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -149,16 +148,16 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           Text(
-                            "Welcome, ${widget.userName}!",
+                            "Hi, ${widget.userName}!",
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 8),
                           Text(
-                            "Let's plan your day and stay focused!",
+                            "Let's get focused today!",
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
@@ -170,26 +169,23 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 20),
                   TextField(
-                    controller: taskController,
+                    controller: taskInput,
                     decoration: InputDecoration(
-                      labelText: 'Enter your task',
+                      labelText: "Your task",
                       border: OutlineInputBorder(),
                       filled: true,
+                      fillColor: Colors.white70,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 15),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        Text(
-                          "Select your mood: ",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "Mood:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Container(
@@ -203,15 +199,13 @@ class _HomePageState extends State<HomePage> {
                       underline: SizedBox(),
                       items: ['Low', 'Normal', 'High']
                           .map(
-                            (value) => DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            ),
+                            (val) =>
+                                DropdownMenuItem(value: val, child: Text(val)),
                           )
                           .toList(),
-                      onChanged: (newValue) {
+                      onChanged: (val) {
                         setState(() {
-                          mood = newValue!;
+                          mood = val!;
                         });
                       },
                     ),
@@ -220,7 +214,7 @@ class _HomePageState extends State<HomePage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Select task priority:",
+                      "Priority:",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -238,15 +232,13 @@ class _HomePageState extends State<HomePage> {
                       underline: SizedBox(),
                       items: ['Low', 'Medium', 'High']
                           .map(
-                            (value) => DropdownMenuItem(
-                              value: value,
-                              child: Text(value),
-                            ),
+                            (val) =>
+                                DropdownMenuItem(value: val, child: Text(val)),
                           )
                           .toList(),
-                      onChanged: (newValue) {
+                      onChanged: (val) {
                         setState(() {
-                          priority = newValue!;
+                          priority = val!;
                         });
                       },
                     ),
@@ -255,16 +247,14 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        result = generateMessage();
-                        taskHistory.add(result);
+                        focusMessage = generateFocus();
+                        history.add(focusMessage);
                       });
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
-                      textStyle: TextStyle(fontSize: 18),
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
                       padding: EdgeInsets.zero,
+                      backgroundColor: Colors.transparent,
                     ),
                     child: Ink(
                       decoration: BoxDecoration(
@@ -280,23 +270,23 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center,
                         height: 50,
                         child: Text(
-                          "Generate Focus Plan",
+                          "Generate Plan",
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  if (result.isNotEmpty)
+                  SizedBox(height: 15),
+                  if (focusMessage.isNotEmpty)
                     Card(
-                      elevation: 8,
+                      elevation: 6,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Text(
-                          result,
+                          focusMessage,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -306,13 +296,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  SizedBox(height: 20),
-                  if (taskHistory.isNotEmpty)
+                  SizedBox(height: 15),
+                  if (history.isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Task History:",
+                          "History:",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -320,14 +310,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        ...taskHistory.reversed.map(
-                          (task) => Card(
+                        ...history.reversed.map(
+                          (t) => Card(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(task),
+                              child: Text(t),
                             ),
                           ),
                         ),
@@ -342,13 +332,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String generateMessage() {
-    String task = taskController.text;
-    if (task.isEmpty) return "Please enter a task first.";
-    if (mood == "Low" && priority == "High")
-      return "Take a deep breath. Work slowly and focus only on $task";
-    if (mood == "High" && priority == "Low")
-      return "Your mood is ideal to start working on $task";
-    return "Focus and work on $task";
+  String generateFocus() {
+    String task = taskInput.text;
+    if (task.isEmpty) return "Please type a task first.";
+    if (mood == "Low" && priority == "High") {
+      return "Take it slow. Focus only on $task";
+    }
+    if (mood == "High" && priority == "Low") {
+      return "Mood is good! You can start $task";
+    }
+    return "Stay focused and work on $task";
   }
 }
