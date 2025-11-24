@@ -10,7 +10,7 @@ class FocusApp extends StatelessWidget {
     return MaterialApp(
       title: 'Daily Focus Planner',
       debugShowCheckedModeBanner: false,
-      home: LoginPage(), // must point here first
+      home: LoginPage(),
     );
   }
 }
@@ -27,9 +27,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade200, Colors.blue.shade600],
+            colors: [Colors.blue.shade300, Colors.purple.shade300],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -43,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   "Daily Focus Planner",
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -71,11 +73,28 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     }
                   },
-                  child: Text("Continue"),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
                     textStyle: TextStyle(fontSize: 18),
-                    backgroundColor: Colors.blue.shade700,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue.shade700, Colors.purple.shade700],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      child: Text(
+                        "Continue",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -106,9 +125,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade200, Colors.blue.shade600],
+            colors: [Colors.blue.shade300, Colors.purple.shade300],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -120,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Card(
-                    elevation: 8,
+                    elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -132,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                           Text(
                             "Welcome, ${widget.userName}!",
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
@@ -150,7 +171,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   TextField(
                     controller: taskController,
                     decoration: InputDecoration(
@@ -161,15 +181,18 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Select your mood:",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Select your mood: ",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -198,7 +221,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 10),
-
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -235,7 +257,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -243,18 +264,37 @@ class _HomePageState extends State<HomePage> {
                         taskHistory.add(result);
                       });
                     },
-                    child: Text('Generate Focus Plan'),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
                       textStyle: TextStyle(fontSize: 18),
-                      backgroundColor: Colors.blue.shade700,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.shade700,
+                            Colors.purple.shade700,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 50,
+                        child: Text(
+                          "Generate Focus Plan",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
-
                   if (result.isNotEmpty)
                     Card(
-                      elevation: 5,
+                      elevation: 8,
                       color: Colors.white.withOpacity(0.85),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -272,9 +312,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-
                   SizedBox(height: 20),
-
                   if (taskHistory.isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,20 +326,18 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        ...taskHistory.reversed
-                            .map(
-                              (task) => Card(
-                                color: Colors.white.withOpacity(0.7),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(task),
-                                ),
-                              ),
-                            )
-                            .toList(),
+                        ...taskHistory.reversed.map(
+                          (task) => Card(
+                            color: Colors.white.withOpacity(0.7),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(task),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                 ],
@@ -315,15 +351,11 @@ class _HomePageState extends State<HomePage> {
 
   String generateMessage() {
     String task = taskController.text;
-
     if (task.isEmpty) return "Please enter a task first.";
-
     if (mood == "Low" && priority == "High")
       return "Take a deep breath. Work slowly and focus only on $task";
-
     if (mood == "High" && priority == "Low")
       return "Your mood is ideal to start working on $task";
-
     return "Focus and work on $task";
   }
 }
