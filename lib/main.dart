@@ -7,11 +7,90 @@ void main() {
 class FocusApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Daily Focus Planner', home: HomePage());
+    return MaterialApp(
+      title: 'Daily Focus Planner',
+      debugShowCheckedModeBanner: false,
+      home: LoginPage(), // must point here first
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController nameController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade200, Colors.blue.shade600],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Daily Focus Planner",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: "Enter your name",
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white.withOpacity(0.8),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    String name = nameController.text.trim();
+                    if (name.isNotEmpty) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(userName: name),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text("Continue"),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 50),
+                    textStyle: TextStyle(fontSize: 18),
+                    backgroundColor: Colors.blue.shade700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class HomePage extends StatefulWidget {
+  final String userName;
+  HomePage({required this.userName});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -21,12 +100,11 @@ class _HomePageState extends State<HomePage> {
   String mood = "Normal";
   String priority = "Medium";
   String result = "";
-  String userName = "Student"; // For welcome message
+  List<String> taskHistory = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Gradient background
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -41,19 +119,18 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // Welcome card
                   Card(
-                    elevation: 5,
+                    elevation: 8,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withOpacity(0.85),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
                           Text(
-                            "Welcome, $userName!",
+                            "Welcome, ${widget.userName}!",
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -72,23 +149,19 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 20),
 
-                  // Task input
                   TextField(
                     controller: taskController,
                     decoration: InputDecoration(
                       labelText: 'Enter your task',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.8),
+                      fillColor: Colors.white.withOpacity(0.85),
                     ),
                   ),
-
                   SizedBox(height: 20),
 
-                  // Mood label + dropdown
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -99,23 +172,33 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  DropdownButton<String>(
-                    value: mood,
-                    items: <String>['Low', 'Normal', 'High'].map((
-                      String value,
-                    ) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        mood = newValue!;
-                      });
-                    },
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButton<String>(
+                      value: mood,
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      items: ['Low', 'Normal', 'High']
+                          .map(
+                            (value) => DropdownMenuItem(
+                              value: value,
+                              child: Text(value),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          mood = newValue!;
+                        });
+                      },
+                    ),
                   ),
-
                   SizedBox(height: 10),
 
-                  // Priority label + dropdown
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -126,48 +209,101 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  DropdownButton<String>(
-                    value: priority,
-                    items: ['Low', 'Medium', 'High'].map((String value) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        priority = newValue!;
-                      });
-                    },
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButton<String>(
+                      value: priority,
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      items: ['Low', 'Medium', 'High']
+                          .map(
+                            (value) => DropdownMenuItem(
+                              value: value,
+                              child: Text(value),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          priority = newValue!;
+                        });
+                      },
+                    ),
                   ),
-
                   SizedBox(height: 20),
 
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
                         result = generateMessage();
+                        taskHistory.add(result);
                       });
                     },
                     child: Text('Generate Focus Plan'),
                     style: ElevatedButton.styleFrom(
                       minimumSize: Size(double.infinity, 50),
                       textStyle: TextStyle(fontSize: 18),
-                      backgroundColor: Colors
-                          .blue
-                          .shade700, // <-- use backgroundColor instead of primary
+                      backgroundColor: Colors.blue.shade700,
                     ),
                   ),
+                  SizedBox(height: 20),
+
+                  if (result.isNotEmpty)
+                    Card(
+                      elevation: 5,
+                      color: Colors.white.withOpacity(0.85),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          result,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
 
                   SizedBox(height: 20),
 
-                  // Result text
-                  Text(
-                    result,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  if (taskHistory.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Task History:",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        ...taskHistory.reversed
+                            .map(
+                              (task) => Card(
+                                color: Colors.white.withOpacity(0.7),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(task),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
                 ],
               ),
             ),
@@ -177,21 +313,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Generate focus message
   String generateMessage() {
     String task = taskController.text;
 
-    if (task.isEmpty) {
-      return "Please enter a task first.";
-    }
+    if (task.isEmpty) return "Please enter a task first.";
 
-    if (mood == "Low" && priority == "High") {
+    if (mood == "Low" && priority == "High")
       return "Take a deep breath. Work slowly and focus only on $task";
-    }
 
-    if (mood == "High" && priority == "Low") {
+    if (mood == "High" && priority == "Low")
       return "Your mood is ideal to start working on $task";
-    }
 
     return "Focus and work on $task";
   }
