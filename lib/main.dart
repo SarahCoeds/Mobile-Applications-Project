@@ -57,7 +57,6 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: "Enter your name",
                     border: OutlineInputBorder(),
                     filled: true,
-                    fillColor: Colors.white.withOpacity(0.8),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -145,7 +144,6 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    color: Colors.white.withOpacity(0.85),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
@@ -177,7 +175,6 @@ class _HomePageState extends State<HomePage> {
                       labelText: 'Enter your task',
                       border: OutlineInputBorder(),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.85),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -198,7 +195,6 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: DropdownButton<String>(
@@ -234,7 +230,6 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: DropdownButton<String>(
@@ -295,7 +290,6 @@ class _HomePageState extends State<HomePage> {
                   if (result.isNotEmpty)
                     Card(
                       elevation: 8,
-                      color: Colors.white.withOpacity(0.85),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -328,7 +322,6 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(height: 5),
                         ...taskHistory.reversed.map(
                           (task) => Card(
-                            color: Colors.white.withOpacity(0.7),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
